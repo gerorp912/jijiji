@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votación - GCA 2025</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">GCA</div>
+        <nav>
+            <a href="index.html">Inicio</a>
+            <a href="categorias.html">Categorías</a>
+        </nav>
+    </header>
+
+    <div class="votacion-container">
+        <h1 class="votacion-title" id="categoria-titulo">CARGANDO...</h1>
+        <div class="votacion-grid" id="nominados-grid"></div>
+    </div>
+
+    <script>
+        const categorias = [
+            { titulo: "MODS DEL AÑO", nominados: ["BENJA", "GERO", "BRUNO", "LEORAIA", "MATE"] },
+            { titulo: "MEJOR VIEWER DEL AÑO", nominados: ["BENJA", "BRUNO", "GERO", "ENZO", "JOACO"] },
+            { titulo: "VIEWER REVELACION", nominados: ["VILLAFANEXO", "ENZO", "TAMPA", "ENZITOGOD", "MACCI"] },
+            { titulo: "MOD REVELACION", nominados: ["BRUNO", "ENZO", "JOACO", "AGRUCK", "LEORAIA"] },
+            { titulo: "MEJOR JUGADOR DE HAXBALL", nominados: ["RF", "ZEIKO", "SANGU", "ABION"] },
+            { titulo: "MEJOR GK DE HAXBALL", nominados: ["TELLO", "NOAH", "FRANCHU", "GIANKISI", "ZEIKO"] },
+            { titulo: "PEOR JUGADOR DE HAXBALL", nominados: ["PENJA", "LAMINE", "COMECARNE", "PALERMO", "MACCI"] },
+            { titulo: "TOP WATCHTIME", nominados: ["BENJA", "GERO", "BRUNO", "JOAKO", "ENZO"] },
+            { titulo: "MEJOR STREAMER DE LA COMUNIDAD", nominados: ["FACU", "IRIONDO", "TORO", "FUTBOL", "AGRUCK", "SANTI", "GRIZAS", "NATABENITEZZZ"] },
+            { titulo: "MEJOR EDITOR", nominados: ["MATE", "CAMINO", "FRANPRODS", "LEO", "TALLERES", "FONTANA"] },
+            { titulo: "TOP DONADORES", nominados: ["NICO", "UBI", "SANTY", "MAXITO", "BRUNO"] },
+            { titulo: "MEJOR ARTISTA", nominados: ["NAFIELD", "LP", "TOBI"] }
+        ];
+
+        let categoriaActual = 0;
+        const total = categorias.length;
+
+        function cargarCategoria() {
+            if (categoriaActual >= total) {
+                localStorage.setItem('gca_completa', 'true');
+                location.href = 'gracias.html';
+                return;
+            }
+
+            const cat = categorias[categoriaActual];
+            document.getElementById('categoria-titulo').textContent = cat.titulo;
+
+            const grid = document.getElementById('nominados-grid');
+            grid.innerHTML = '';
+
+            cat.nominados.forEach(nom => {
+                const card = document.createElement('div');
+                card.className = 'votacion-card';
+                card.innerHTML = `
+                    <h3>${nom}</h3>
+                    <div class="btn-votar-card" onclick="votarYAvanzar()">Votar</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function votarYAvanzar() {
+            categoriaActual++;
+            localStorage.setItem('gca_progreso', categoriaActual);
+            cargarCategoria();
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('gca_completa') === 'true') {
+                location.href = 'gracias.html';
+            }
+            const saved = localStorage.getItem('gca_progreso');
+            if (saved) categoriaActual = parseInt(saved);
+            cargarCategoria();
+        };
+    </script>
+</body>
+</html>
